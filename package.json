@@ -1,0 +1,27 @@
+{
+  "name": "roicai",
+  "version": "0.0.0",
+  "description": "TypeScript and JavaScript client for the ROIC.ai financial data API",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "generate": "scripts/generate.sh",
+    "build": "rm -rf dist && tsc -p tsconfig.json",
+    "test": "node --test test/client.test.mjs test/live.test.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,46 @@
+name: Codegen
+
+# Regenerates the SDK from the live API and opens a pull request when it changed.
+# roicai-api sends the `api-deployed` dispatch after each deploy; the schedule
+# catches anything it misses.
+on:
+  repository_dispatch:
+    types: [api-deployed]
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: codegen
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  codegen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-forge
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: scripts/generate.sh
+      - run: npm run build
+      - run: npm test
+        env:
+          ROICAI_API_KEY: ${{ secrets.ROICAI_API_KEY }}
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: codegen/sync
+          commit-message: "chore: regenerate from the API"
+          title: "chore: regenerate from the API"
+          body: |
+            Regenerated from https://api.roic.ai/openapi.json.
+
+            Review the `openapi.json` diff for what changed in the API. A removed or renamed method, group or field needs a major version.
+          delete-branch: true
