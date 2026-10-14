@@ -1,10 +1,10 @@
 {
   "name": "roicai",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Official Node.js and TypeScript client for the ROIC.ai financial data and stock API: fundamentals, earnings calls, prices",
   "license": "MIT",
   "author": "ROIC.ai",
-  "homepage": "https://github.com/roicai/roicai-node#readme",
+  "homepage": "https://www.roic.ai/api",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/roicai/roicai-node.git"
