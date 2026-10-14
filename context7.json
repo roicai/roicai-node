@@ -1,0 +1,18 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "ROIC.ai Node.js SDK",
+  "description": "Official TypeScript and JavaScript client for the ROIC.ai financial data and stock API: fundamentals (income statements, balance sheets, cash flow, ratios, multiples), earnings call transcripts, stock and forex prices, SEC filings, earnings calendar and company profiles. Fully typed, ESM, Node.js 20+ and Bun, with auto-pagination.",
+  "folders": [],
+  "excludeFolders": ["src", "test", "scripts", "dist", ".github"],
+  "excludeFiles": ["CONTRIBUTING.md"],
+  "rules": [
+    "Install with `npm install roicai`. The package is ESM-only; from CommonJS use `await import('roicai')`.",
+    "Create the client with `createClient({ token: process.env.ROICAI_API_KEY })`. Don't hard-code keys.",
+    "Identify a company as EXCHANGE:SYMBOL (e.g. `NASDAQ:AAPL`), a ticker ID (`tkr_...`) or a FIGI.",
+    "Methods follow the API's URL groups and take one object, e.g. `roicai.fundamentals.incomeStatements.list({ identifier: 'NASDAQ:AAPL', periodType: 'annual' })`; each group has list, retrieve or search.",
+    "Fields are camelCase (`periodEndDate`), and dates are ISO 8601 strings.",
+    "Awaiting a list gives one page; `for await` over it, `autoPagingEach` or `autoPagingToArray({ limit })` (at most 10,000) fetch the next pages. Each page is one billed request.",
+    "Filter ranges with `dateGte`, `dateLte`, `fiscalYearGte`, `fiscalYearLte` (and `Gt`/`Lt`); dates are 'YYYY-MM-DD' strings.",
+    "A failed request throws `ApiError` with `status` and the API's error in `details`."
+  ]
+}
