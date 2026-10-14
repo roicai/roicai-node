@@ -1,9 +1,27 @@
 {
   "name": "roicai",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "TypeScript and JavaScript client for the ROIC.ai financial data API",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
+  "author": "ROIC.ai",
+  "homepage": "https://github.com/roicai/roicai-node#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roicai/roicai-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/roicai/roicai-node/issues"
+  },
+  "keywords": [
+    "roicai",
+    "roic",
+    "financial data",
+    "stocks",
+    "fundamentals",
+    "earnings calls",
+    "api",
+    "sdk"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -12,6 +30,7 @@
     }
   },
   "files": ["dist"],
+  "sideEffects": false,
   "engines": {
     "node": ">=20"
   },

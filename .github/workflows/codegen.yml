@@ -51,5 +51,5 @@ jobs:
           body: |
             Regenerated from https://api.roic.ai/openapi.json.
 
-            Review the `openapi.json` diff for what changed in the API. A removed or renamed method, group or field needs a major version.
+            Review the `openapi.json` diff for what changed in the API. A removed or renamed method, group or field is a breaking change.
           delete-branch: true
