@@ -45,11 +45,6 @@ export interface ListRequest {
    * `NASDAQ:AAPL`), or a FIGI.
    */
   identifier: string;
-  /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
   periodType?: "annual" | "quarterly" | "ttm";
   periodLabel?: "FY" | "Q1" | "Q2" | "Q3" | "Q4";
   /**
@@ -105,7 +100,7 @@ export type ListResponse = V3BalanceSheetFinancialPeriodList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/fundamental/balance-sheet/{identifier}",
-  query: { apikey: "apikey", periodType: "period_type", periodLabel: "period_label", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", fiscalYearGte: "fiscal_year.gte", fiscalYearGt: "fiscal_year.gt", fiscalYearLte: "fiscal_year.lte", fiscalYearLt: "fiscal_year.lt", order: "order", limit: "limit", page: "page" },
+  query: { periodType: "period_type", periodLabel: "period_label", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", fiscalYearGte: "fiscal_year.gte", fiscalYearGt: "fiscal_year.gt", fiscalYearLte: "fiscal_year.lte", fiscalYearLt: "fiscal_year.lt", order: "order", limit: "limit", page: "page" },
   response: V3BalanceSheetFinancialPeriodListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

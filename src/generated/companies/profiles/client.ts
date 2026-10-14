@@ -51,5 +51,5 @@ const RetrieveOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/company/profile/{identifier}",
   response: V3CompanyProfileCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

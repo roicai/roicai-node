@@ -43,11 +43,6 @@ export function bind(transport: Transport): Client {
 
 export interface ListRequest {
   /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-  /**
    * Restrict results to a single company. Accepts a company-profile ID, a
    * ticker ID, an exchange and symbol separated by a colon (e.g.
    * `NASDAQ:AAPL`), or a FIGI. Employee counts are company-level data, so
@@ -92,7 +87,7 @@ export type ListResponse = V3EmployeeCountList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/company/employees",
-  query: { apikey: "apikey", identifier: "identifier", fiscalYear: "fiscal_year", fiscalYearGte: "fiscal_year.gte", fiscalYearGt: "fiscal_year.gt", fiscalYearLte: "fiscal_year.lte", fiscalYearLt: "fiscal_year.lt", order: "order", limit: "limit", page: "page" },
+  query: { identifier: "identifier", fiscalYear: "fiscal_year", fiscalYearGte: "fiscal_year.gte", fiscalYearGt: "fiscal_year.gt", fiscalYearLte: "fiscal_year.lte", fiscalYearLt: "fiscal_year.lt", order: "order", limit: "limit", page: "page" },
   response: V3EmployeeCountListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

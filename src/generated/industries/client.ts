@@ -36,20 +36,13 @@ export function bind(transport: Transport): Client {
   };
 }
 
-export interface ListRequest {
-  /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-}
+export interface ListRequest {}
 
 export type ListResponse = V3IndustryList;
 
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/industries",
-  query: { apikey: "apikey" },
   response: V3IndustryListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

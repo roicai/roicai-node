@@ -7,10 +7,6 @@ import {
   bind as bindEmployees,
 } from "./employees/client.js";
 import {
-  type Client as LogosClient,
-  bind as bindLogos,
-} from "./logos/client.js";
-import {
   type Client as ProfilesClient,
   bind as bindProfiles,
 } from "./profiles/client.js";
@@ -24,7 +20,6 @@ export interface ClientOptions extends BaseClientOptions {
 
 export interface Client {
   readonly employees: EmployeesClient;
-  readonly logos: LogosClient;
   readonly profiles: ProfilesClient;
 }
 
@@ -34,14 +29,10 @@ export function createClient(options: ClientOptions): Client {
 
 export function bind(transport: Transport): Client {
   let employeesClient: EmployeesClient | undefined;
-  let logosClient: LogosClient | undefined;
   let profilesClient: ProfilesClient | undefined;
   return {
     get employees() {
       return (employeesClient ??= bindEmployees(transport));
-    },
-    get logos() {
-      return (logosClient ??= bindLogos(transport));
     },
     get profiles() {
       return (profilesClient ??= bindProfiles(transport));
