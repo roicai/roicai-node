@@ -70,6 +70,22 @@ export interface ListRequest {
    * Return prices from exactly this date.
    */
   date?: string;
+  /**
+   * Return prices whose date is on or after this date.
+   */
+  dateGte?: string;
+  /**
+   * Return prices whose date is strictly after this date.
+   */
+  dateGt?: string;
+  /**
+   * Return prices whose date is on or before this date.
+   */
+  dateLte?: string;
+  /**
+   * Return prices whose date is strictly before this date.
+   */
+  dateLt?: string;
   adjustment?: "none" | "splits" | "total_return";
   adjusted?: "true" | "false";
   order?: "asc" | "desc";
@@ -89,7 +105,7 @@ export type ListResponse = V3HistoricalPriceList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/stock-prices/{identifier}",
-  query: { apikey: "apikey", date: "date", adjustment: "adjustment", adjusted: "adjusted", order: "order", limit: "limit", page: "page" },
+  query: { apikey: "apikey", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", adjustment: "adjustment", adjusted: "adjusted", order: "order", limit: "limit", page: "page" },
   response: V3HistoricalPriceListCodec,
   errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
 };

@@ -52,6 +52,38 @@ export interface ListRequest {
   apikey?: string;
   periodType?: "annual" | "quarterly" | "ttm";
   periodLabel?: "FY" | "Q1" | "Q2" | "Q3" | "Q4";
+  /**
+   * Return statements whose period end date is on or after this date.
+   */
+  dateGte?: string;
+  /**
+   * Return statements whose period end date is strictly after this date.
+   */
+  dateGt?: string;
+  /**
+   * Return statements whose period end date is on or before this date.
+   */
+  dateLte?: string;
+  /**
+   * Return statements whose period end date is strictly before this date.
+   */
+  dateLt?: string;
+  /**
+   * Return statements from this fiscal year onward.
+   */
+  fiscalYearGte?: string | number;
+  /**
+   * Return statements after this fiscal year.
+   */
+  fiscalYearGt?: string | number;
+  /**
+   * Return statements through this fiscal year.
+   */
+  fiscalYearLte?: string | number;
+  /**
+   * Return statements before this fiscal year.
+   */
+  fiscalYearLt?: string | number;
   order?: "asc" | "desc";
   /**
    * Maximum number of resources to return. Defaults to 50.
@@ -69,7 +101,7 @@ export type ListResponse = V3CreditFinancialPeriodList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/fundamental/ratios/credit/{identifier}",
-  query: { apikey: "apikey", periodType: "period_type", periodLabel: "period_label", order: "order", limit: "limit", page: "page" },
+  query: { apikey: "apikey", periodType: "period_type", periodLabel: "period_label", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", fiscalYearGte: "fiscal_year.gte", fiscalYearGt: "fiscal_year.gt", fiscalYearLte: "fiscal_year.lte", fiscalYearLt: "fiscal_year.lt", order: "order", limit: "limit", page: "page" },
   response: V3CreditFinancialPeriodListCodec,
   errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
 };

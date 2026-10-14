@@ -54,6 +54,22 @@ export interface ListRequest {
    * Return splits executed on exactly this date.
    */
   date?: string;
+  /**
+   * Return splits whose execution date is on or after this date.
+   */
+  dateGte?: string;
+  /**
+   * Return splits whose execution date is strictly after this date.
+   */
+  dateGt?: string;
+  /**
+   * Return splits whose execution date is on or before this date.
+   */
+  dateLte?: string;
+  /**
+   * Return splits whose execution date is strictly before this date.
+   */
+  dateLt?: string;
   order?: "asc" | "desc";
   /**
    * Maximum number of resources to return. Defaults to 100.
@@ -71,7 +87,7 @@ export type ListResponse = V3StockSplitList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/stock-splits",
-  query: { apikey: "apikey", identifier: "identifier", date: "date", order: "order", limit: "limit", page: "page" },
+  query: { apikey: "apikey", identifier: "identifier", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", order: "order", limit: "limit", page: "page" },
   response: V3StockSplitListCodec,
   errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
 };

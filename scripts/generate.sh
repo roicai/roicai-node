@@ -41,7 +41,35 @@ cp "$fetched" openapi.json
 jq 'walk(if type == "object" and (.format == "date-time" or .format == "date") then del(.format) else . end)' \
   openapi.json > "$sdk_spec"
 
+# forge leaves out query parameters whose names have characters other than
+# letters, digits, - and _, such as the range filter date.gte. Rename each one
+# with _ for forge (date_gte, which it names dateGte), then put the real name
+# back in the queries the generated code sends.
+dotted=()
+while IFS= read -r name; do
+  [[ -n "$name" ]] && dotted+=("$name")
+done < <(jq -r '[.paths[][] | objects | .parameters[]? | select(.in == "query" and (.name | test("[^A-Za-z0-9_-]"))) | .name] | unique[]' "$sdk_spec")
+for name in "${dotted[@]}"; do
+  if [[ "$name" =~ [^A-Za-z0-9_.-] ]]; then
+    echo "generate: query parameter $name has a character other than letters, digits, -, _ and ." >&2
+    exit 1
+  fi
+  if jq -e --arg n "${name//./_}" '[.paths[][] | objects | .parameters[]? | select(.in == "query" and .name == $n)] | length > 0' "$sdk_spec" > /dev/null; then
+    echo "generate: renaming query parameter $name to ${name//./_} would collide with an existing one" >&2
+    exit 1
+  fi
+done
+renamed="$(mktemp)"
+jq 'walk(if type == "object" and .in == "query" and (.name | type) == "string" then .name |= gsub("\\."; "_") else . end)' \
+  "$sdk_spec" > "$renamed"
+mv "$renamed" "$sdk_spec"
+
 # forge overwrites the files it generates but leaves others alone, so a group
 # removed from the API would linger without this.
 rm -rf src/generated
 "$forge" "$sdk_spec" --target ts --out src/generated
+
+for name in "${dotted[@]}"; do
+  find src/generated -name client.ts -exec \
+    perl -pi -e "s/\"\Q${name//./_}\E\"/\"${name}\"/g if /^ *query: \{/" {} +
+done
