@@ -1,13 +1,11 @@
 name: Codegen
 
 # Regenerates the SDK from the live API and opens a pull request when it changed.
-# roicai-api sends the `api-deployed` dispatch after each deploy; the schedule
-# catches anything it misses.
+# roicai-api sends the `api-deployed` dispatch after each deploy. If a dispatch
+# fails, run this workflow by hand from the Actions tab.
 on:
   repository_dispatch:
     types: [api-deployed]
-  schedule:
-    - cron: "0 6 * * *"
   workflow_dispatch:
 
 concurrency:
