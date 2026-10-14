@@ -90,6 +90,22 @@ export interface ListRequest {
    * Return calls that occurred on this UTC calendar date.
    */
   date?: string;
+  /**
+   * Return calls on or after this UTC calendar date.
+   */
+  dateGte?: string;
+  /**
+   * Return calls after this UTC calendar date.
+   */
+  dateGt?: string;
+  /**
+   * Return calls on or before this UTC calendar date.
+   */
+  dateLte?: string;
+  /**
+   * Return calls before this UTC calendar date.
+   */
+  dateLt?: string;
   order?: "asc" | "desc";
   /**
    * Maximum number of resources to return. Defaults to 50.
@@ -132,7 +148,7 @@ export type RetrieveResponse = V3EarningsCall;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/earnings-calls",
-  query: { apikey: "apikey", identifier: "identifier", fiscalYear: "fiscal_year", fiscalQuarter: "fiscal_quarter", date: "date", order: "order", limit: "limit", page: "page" },
+  query: { apikey: "apikey", identifier: "identifier", fiscalYear: "fiscal_year", fiscalQuarter: "fiscal_quarter", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", order: "order", limit: "limit", page: "page" },
   response: V3EarningsCallListCodec,
   errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
 };

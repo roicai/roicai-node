@@ -6,7 +6,9 @@ This guide is for maintainers of the ROIC.ai Node.js library. To report a bug or
 
 The client in `src/generated` is generated from the API's OpenAPI document with [forge](https://github.com/cloudflare/forge). Don't edit it by hand: CI regenerates it from `openapi.json` and fails on any difference.
 
-`src/index.ts` is the only hand-written source. It sets the default `baseUrl` and re-exports the generated client.
+`src/index.ts` and `src/pagination.ts` are the only hand-written sources. `index.ts` sets the default `baseUrl` and re-exports the generated client. `pagination.ts` makes each `list` and `search` method return a promise that can also be iterated through every page, since forge doesn't generate pagination.
+
+`scripts/generate.sh` changes the document before forge reads it: it removes the date formats, so dates are ISO strings rather than Temporal objects, and it renames query parameters with dots, such as `date.gte`, which forge would leave out. The generated code sends them under their real names.
 
 Build and test:
 

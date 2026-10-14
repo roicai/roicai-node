@@ -152,35 +152,64 @@ await logged.tickers.retrieve({ identifier: 'NASDAQ:MSFT' });
 // GET https://api.roic.ai/v3.0.0/tickers/NASDAQ%3AMSFT 200
 ```
 
-### Using parameters the library doesn't type
+### Date and fiscal year ranges
 
-Range filters such as `date.gte`, `date.lte` and `fiscal_year.gte` aren't typed request fields yet. Pass them in `query`:
+Lists of dated rows take `dateGte`, `dateGt`, `dateLte` and `dateLt`, with dates as `YYYY-MM-DD`:
 
 ```ts
-const january = await roicai.stockPrices.list(
-  { identifier: 'NASDAQ:AAPL', order: 'asc' },
-  { query: new URLSearchParams({ 'date.gte': '2025-01-01', 'date.lte': '2025-01-31' }) },
-);
+const january = await roicai.stockPrices.list({
+  identifier: 'NASDAQ:AAPL',
+  dateGte: '2025-01-01',
+  dateLte: '2025-01-31',
+  order: 'asc',
+});
 ```
 
-`date.gte`, `date.gt`, `date.lte` and `date.lt` work on stock prices, fundamentals, earnings calls, the earnings calendar, forex prices and stock splits. Fundamentals also take `fiscal_year.gte`, `fiscal_year.gt`, `fiscal_year.lte` and `fiscal_year.lt`.
-
-### Pagination
-
-A list returns up to `limit` rows in `data`. `nextPageUrl` is null on the last page. To get the next page, send the same request again with the `page` token from `nextPageUrl`. The token only works with the same filters and `limit`:
+They work on stock prices, stock splits, forex prices, earnings calls, the earnings calendar and every fundamentals list. Fundamentals and employee counts also take `fiscalYearGte`, `fiscalYearGt`, `fiscalYearLte` and `fiscalYearLt`:
 
 ```ts
-const request = { identifier: 'NASDAQ:AAPL', limit: 100 };
-let page = await roicai.earningsCalls.list(request);
-for (;;) {
-  for (const call of page.data) {
-    console.log(call.fiscalYear, call.fiscalQuarter, call.date);
-  }
-  if (!page.nextPageUrl) break;
-  const token = new URL(page.nextPageUrl, 'https://api.roic.ai').searchParams.get('page')!;
-  page = await roicai.earningsCalls.list({ ...request, page: token });
+const since2020 = await roicai.fundamentals.incomeStatements.list({
+  identifier: 'NASDAQ:AAPL',
+  periodType: 'annual',
+  fiscalYearGte: 2020,
+});
+```
+
+### Auto-pagination
+
+List methods return one page of up to `limit` rows. You can also have the library fetch the next pages for you as you go. It sends the same request again with the page token from `nextPageUrl`, so every page uses your filters, and it stops after the last page. There are a few ways to do this.
+
+#### Async iterators (`for await`)
+
+```ts
+for await (const call of roicai.earningsCalls.list({ identifier: 'NASDAQ:AAPL', limit: 100 })) {
+  console.log(call.fiscalYear, call.fiscalQuarter, call.date);
 }
 ```
+
+Use `break` to stop early. The library doesn't request any page after the one you stopped in.
+
+#### `autoPagingEach`
+
+```ts
+await roicai.stockPrices.list({ identifier: 'NASDAQ:AAPL', dateGte: '2020-01-01' }).autoPagingEach((price) => {
+  console.log(price.date, price.close);
+});
+```
+
+The callback can return a promise, which the library waits for before the next item. Return `false` to stop.
+
+#### `autoPagingToArray`
+
+This collects the items into an array. It's meant for lists you expect to be small, so you must pass a `limit` of at most 10,000; for more, use one of the methods above:
+
+```ts
+const tickers = await roicai.tickers.list({ exchange: 'NASDAQ', limit: 500 }).autoPagingToArray({ limit: 2000 });
+```
+
+#### Fetching pages yourself
+
+Awaiting a list gives its first page. To fetch the next page yourself, send the same request with the `page` token from `nextPageUrl`, which is `null` on the last page. A token only works with the filters and `limit` it was issued for.
 
 ## Handling errors
 
@@ -259,7 +288,7 @@ const latest = await roicai.stockPrices.latest.retrieve({ identifier: 'NASDAQ:AA
 console.log(latest.date, latest.close);
 ```
 
-For a date range, see [Using parameters the library doesn't type](#using-parameters-the-library-doesnt-type).
+For a date range, see [Date and fiscal year ranges](#date-and-fiscal-year-ranges).
 
 ### Financial statements
 
