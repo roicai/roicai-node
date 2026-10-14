@@ -41,6 +41,32 @@ cp "$fetched" openapi.json
 jq 'walk(if type == "object" and (.format == "date-time" or .format == "date") then del(.format) else . end)' \
   openapi.json > "$sdk_spec"
 
+# The client always sends the API key as a Bearer header, and the API rejects a
+# request that also has the apikey query parameter, so the SDK doesn't offer it.
+#
+# forge generates no method for an operation without a JSON response, such as
+# the company logo image, but still adds its group, empty. Leave those out.
+#
+# Every v3 error body is a v3.Error, also for statuses an operation doesn't
+# list, such as 402 or 403. A default response lets the client decode them all
+# into ApiError.details.
+trimmed="$(mktemp)"
+jq '
+  def json_success: [.responses // {} | to_entries[] | select(.key | test("^2")) | .value.content // {} | has("application/json")] | any;
+  .paths |= (map_values(with_entries(
+      if (.value | type) == "object" and (.value | has("responses")) then
+        if (.value | json_success) then
+          .value.parameters |= (if . == null then . else map(select(.in != "query" or .name != "apikey")) end)
+          | .value.responses.default //= {
+              description: "Error",
+              content: { "application/json": { schema: { "$ref": "#/components/schemas/v3.Error" } } }
+            }
+        else empty end
+      else . end))
+    | with_entries(select(.value | to_entries | any(.value | type == "object" and has("responses")))))
+' "$sdk_spec" > "$trimmed"
+mv "$trimmed" "$sdk_spec"
+
 # forge leaves out query parameters whose names have characters other than
 # letters, digits, - and _, such as the range filter date.gte. Rename each one
 # with _ for forge (date_gte, which it names dateGte), then put the real name

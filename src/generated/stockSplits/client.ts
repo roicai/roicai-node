@@ -39,11 +39,6 @@ export function bind(transport: Transport): Client {
 
 export interface ListRequest {
   /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-  /**
    * Restrict results to a single ticker. Accepts an exchange and symbol
    * separated by a colon (e.g. `NASDAQ:AAPL`), a ticker ID, or a FIGI. Stock
    * splits are per ticker, so results are the split events for that exact
@@ -87,7 +82,7 @@ export type ListResponse = V3StockSplitList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/stock-splits",
-  query: { apikey: "apikey", identifier: "identifier", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", order: "order", limit: "limit", page: "page" },
+  query: { identifier: "identifier", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", order: "order", limit: "limit", page: "page" },
   response: V3StockSplitListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

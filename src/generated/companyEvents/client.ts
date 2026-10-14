@@ -44,11 +44,6 @@ export function bind(transport: Transport): Client {
 
 export interface ListRequest {
   /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-  /**
    * Restrict results to a single company. Accepts an exchange and symbol
    * separated by a colon (e.g. `NASDAQ:AAPL`), a ticker ID, or a FIGI; the
    * response `symbol` echoes the listing you requested. Omit to list events
@@ -73,7 +68,7 @@ export type ListResponse = V3CompanyEventList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/company-events",
-  query: { apikey: "apikey", identifier: "identifier", content: "content", order: "order", limit: "limit", page: "page" },
+  query: { identifier: "identifier", content: "content", order: "order", limit: "limit", page: "page" },
   response: V3CompanyEventListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

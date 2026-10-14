@@ -42,11 +42,6 @@ export function bind(transport: Transport): Client {
 
 export interface RetrieveRequest {
   /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-  /**
    * Exchange code to retrieve trading-hours history for, e.g. NASDAQ.
    */
   exchange: string;
@@ -57,7 +52,7 @@ export type RetrieveResponse = V3ExchangeTradingHours;
 const RetrieveOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/exchanges/trading-hours",
-  query: { apikey: "apikey", exchange: "exchange" },
+  query: { exchange: "exchange" },
   response: V3ExchangeTradingHoursCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

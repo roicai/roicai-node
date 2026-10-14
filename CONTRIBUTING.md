@@ -8,7 +8,7 @@ The client in `src/generated` is generated from the API's OpenAPI document with 
 
 `src/index.ts` and `src/pagination.ts` are the only hand-written sources. `index.ts` sets the default `baseUrl` and re-exports the generated client. `pagination.ts` makes each `list` and `search` method return a promise that can also be iterated through every page, since forge doesn't generate pagination.
 
-`scripts/generate.sh` changes the document before forge reads it: it removes the date formats, so dates are ISO strings rather than Temporal objects, and it renames query parameters with dots, such as `date.gte`, which forge would leave out. The generated code sends them under their real names.
+`scripts/generate.sh` changes the document before forge reads it: it removes the date formats, so dates are ISO strings rather than Temporal objects, and it renames query parameters with dots, such as `date.gte`, which forge would leave out. The generated code sends them under their real names. It also removes the `apikey` query parameter, since the client always sends the key as a Bearer header and the API rejects both together; leaves out operations without a JSON response, such as the company logo image; and gives every operation a default `v3.Error` response, so `ApiError.details` is decoded for any error status.
 
 Build and test:
 

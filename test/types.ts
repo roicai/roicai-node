@@ -26,4 +26,12 @@ ticker.autoPagingEach;
 for await (const item of roicai.tickers.retrieve({ identifier: 'NASDAQ:AAPL' })) {
 }
 
+// The client authenticates with the Bearer header only.
+// @ts-expect-error apikey is not a request field
+roicai.tickers.list({ apikey: 'key' });
+
+// The logo endpoint returns an image, which the client doesn't cover.
+// @ts-expect-error companies has no logos group
+roicai.companies.logos;
+
 export type { PagePromise };

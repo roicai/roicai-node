@@ -45,6 +45,36 @@ test('returns fields in camelCase with dates as ISO strings', async () => {
   assert.equal(events.data[0].createdAt, '2025-10-30T20:30:00Z');
 });
 
+test('decodes the error of a status the operation does not list', async () => {
+  const { fetch } = fakeFetch(403, {
+    error: { type: 'authentication_error', code: 'forbidden', message: 'Forbidden.', request_id: 'req_1' },
+  });
+  const roicai = createClient({ token: 'key_123', fetch });
+
+  await assert.rejects(roicai.tickers.retrieve({ identifier: 'NASDAQ:AAPL' }), (err) => {
+    assert.equal(err.status, 403);
+    assert.equal(err.message, 'Forbidden.');
+    assert.equal(err.details.error.requestId, 'req_1');
+    return true;
+  });
+});
+
+test('authenticates only with the Bearer header', async () => {
+  const { fetch, requests } = fakeFetch(200, { data: [], next_page_url: null, previous_page_url: null });
+  const roicai = createClient({ token: 'key_123', fetch });
+
+  // The API rejects a request with both the header and the apikey query parameter.
+  await roicai.tickers.list({ apikey: 'key_123', limit: 1 });
+
+  assert.equal(new URL(requests[0].url).search, '?limit=1');
+});
+
+test('has no logos group, since the logo endpoint returns an image', () => {
+  const roicai = createClient({ token: 'key_123' });
+
+  assert.equal('logos' in roicai.companies, false);
+});
+
 test('throws an ApiError with the status of a failed request', async () => {
   const { fetch } = fakeFetch(404, { error: { type: 'not_found_error', message: 'No ticker matches.' } });
   const roicai = createClient({ token: 'key_123', fetch });
@@ -123,6 +153,33 @@ test('autoPagingToArray returns up to limit items and requires a limit', async (
   assert.deepEqual(tickers.map((t) => t.symbol), ['A', 'B', 'C']);
   await assert.rejects(roicai.tickers.list({ limit: 2 }).autoPagingToArray({}), TypeError);
   await assert.rejects(roicai.tickers.list({ limit: 2 }).autoPagingToArray({ limit: 10_001 }), TypeError);
+});
+
+test('autoPagingToArray with an invalid limit leaves no unhandled rejection when the request fails', async () => {
+  const unhandled = [];
+  const onUnhandled = (reason) => unhandled.push(reason);
+  process.on('unhandledRejection', onUnhandled);
+  try {
+    const { fetch } = fakeFetch(401, { error: { type: 'authentication_error', message: 'Bad key.' } });
+    const roicai = createClient({ token: 'key_123', fetch });
+
+    await assert.rejects(roicai.tickers.list({ limit: 2 }).autoPagingToArray({ limit: 10_001 }), TypeError);
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    assert.deepEqual(unhandled, []);
+  } finally {
+    process.off('unhandledRejection', onUnhandled);
+  }
+});
+
+test('a list that autoPagingToArray rejected still rejects when awaited', async () => {
+  const { fetch } = fakeFetch(401, { error: { type: 'authentication_error', message: 'Bad key.' } });
+  const roicai = createClient({ token: 'key_123', fetch });
+
+  const tickers = roicai.tickers.list({ limit: 2 });
+  await assert.rejects(tickers.autoPagingToArray({ limit: 0 }), TypeError);
+
+  await assert.rejects(tickers, (err) => err instanceof ApiError && err.status === 401);
 });
 
 test('stops instead of following a page token twice', async () => {

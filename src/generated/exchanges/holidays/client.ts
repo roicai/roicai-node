@@ -39,11 +39,6 @@ export function bind(transport: Transport): Client {
 
 export interface RetrieveRequest {
   /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-  /**
    * Exchange code to retrieve the holiday calendar for, e.g. NASDAQ.
    */
   exchange: string;
@@ -54,7 +49,7 @@ export type RetrieveResponse = V3ExchangeHolidays;
 const RetrieveOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/exchanges/holidays",
-  query: { apikey: "apikey", exchange: "exchange" },
+  query: { exchange: "exchange" },
   response: null,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

@@ -58,11 +58,6 @@ export function bind(transport: Transport): Client {
 }
 
 export interface ListRequest {
-  /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
   exchange?: string;
   /**
    * Filter by exact security type: 'dr', 'fund', or 'stock'.
@@ -100,11 +95,6 @@ export interface RetrieveRequest {
 export type RetrieveResponse = V3Ticker;
 
 export interface SearchRequest {
-  /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
   query: string;
   /**
    * Fields used for matching. 'symbol' (the default) ranks ticker codes and
@@ -128,22 +118,22 @@ export type SearchResponse = V3TickerList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/tickers",
-  query: { apikey: "apikey", exchange: "exchange", type: "type", isPrimary: "is_primary", status: "status", listingCountryCode: "listing_country_code", order: "order", limit: "limit", page: "page" },
+  query: { exchange: "exchange", type: "type", isPrimary: "is_primary", status: "status", listingCountryCode: "listing_country_code", order: "order", limit: "limit", page: "page" },
   response: V3TickerListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };
 
 const RetrieveOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/tickers/{identifier}",
   response: V3TickerCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };
 
 const SearchOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/tickers/search",
-  query: { apikey: "apikey", query: "query", searchBy: "search_by", limit: "limit", page: "page" },
+  query: { query: "query", searchBy: "search_by", limit: "limit", page: "page" },
   response: V3TickerListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

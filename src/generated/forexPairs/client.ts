@@ -40,11 +40,6 @@ export function bind(transport: Transport): Client {
 
 export interface ListRequest {
   /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-  /**
    * Return only pairs quoted from this base currency.
    */
   baseCurrency?: string;
@@ -78,7 +73,7 @@ export type ListResponse = V3ForexPairList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/forex-pairs",
-  query: { apikey: "apikey", baseCurrency: "base_currency", quoteCurrency: "quote_currency", currency: "currency", search: "search", order: "order", limit: "limit", page: "page" },
+  query: { baseCurrency: "base_currency", quoteCurrency: "quote_currency", currency: "currency", search: "search", order: "order", limit: "limit", page: "page" },
   response: V3ForexPairListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };

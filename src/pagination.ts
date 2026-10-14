@@ -106,13 +106,18 @@ function pagePromise(
 
   async function autoPagingToArray(options: { limit: number }) {
     const limit = options?.limit;
-    if (!Number.isInteger(limit) || limit < 1) {
-      throw new TypeError('autoPagingToArray needs a positive integer limit, such as { limit: 1000 }.');
-    }
-    if (limit > MAX_TO_ARRAY) {
-      throw new TypeError(
-        `autoPagingToArray takes a limit of at most ${MAX_TO_ARRAY}; iterate longer lists with for await or autoPagingEach.`
-      );
+    const invalid =
+      !Number.isInteger(limit) || limit < 1
+        ? 'autoPagingToArray needs a positive integer limit, such as { limit: 1000 }.'
+        : limit > MAX_TO_ARRAY
+          ? `autoPagingToArray takes a limit of at most ${MAX_TO_ARRAY}; iterate longer lists with for await or autoPagingEach.`
+          : undefined;
+    if (invalid !== undefined) {
+      // The first page was requested when the list method was called. Nothing
+      // awaits it after this throw, so its failure would be an unhandled
+      // rejection, which ends the Node.js process.
+      first.catch(() => {});
+      throw new TypeError(invalid);
     }
     const result: unknown[] = [];
     for await (const item of items()) {

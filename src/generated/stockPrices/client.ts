@@ -62,11 +62,6 @@ export interface ListRequest {
    */
   identifier: string;
   /**
-   * Browser-friendly alternative to Bearer authentication. Use either this
-   * parameter or the Authorization header, never both.
-   */
-  apikey?: string;
-  /**
    * Return prices from exactly this date.
    */
   date?: string;
@@ -105,7 +100,7 @@ export type ListResponse = V3HistoricalPriceList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/stock-prices/{identifier}",
-  query: { apikey: "apikey", date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", adjustment: "adjustment", adjusted: "adjusted", order: "order", limit: "limit", page: "page" },
+  query: { date: "date", dateGte: "date.gte", dateGt: "date.gt", dateLte: "date.lte", dateLt: "date.lt", adjustment: "adjustment", adjusted: "adjusted", order: "order", limit: "limit", page: "page" },
   response: V3HistoricalPriceListCodec,
-  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
+  errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec, default: V3ErrorCodec },
 };
