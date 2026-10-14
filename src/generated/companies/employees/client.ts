@@ -59,6 +59,22 @@ export interface ListRequest {
    * Return only counts for exactly this fiscal year.
    */
   fiscalYear?: string | number;
+  /**
+   * Return counts from this fiscal year onward.
+   */
+  fiscalYearGte?: string | number;
+  /**
+   * Return counts after this fiscal year.
+   */
+  fiscalYearGt?: string | number;
+  /**
+   * Return counts through this fiscal year.
+   */
+  fiscalYearLte?: string | number;
+  /**
+   * Return counts before this fiscal year.
+   */
+  fiscalYearLt?: string | number;
   order?: "asc" | "desc";
   /**
    * Maximum number of resources to return. Defaults to 100.
@@ -76,7 +92,7 @@ export type ListResponse = V3EmployeeCountList;
 const ListOperation: Operation = {
   method: "GET",
   route: "/v3.0.0/company/employees",
-  query: { apikey: "apikey", identifier: "identifier", fiscalYear: "fiscal_year", order: "order", limit: "limit", page: "page" },
+  query: { apikey: "apikey", identifier: "identifier", fiscalYear: "fiscal_year", fiscalYearGte: "fiscal_year.gte", fiscalYearGt: "fiscal_year.gt", fiscalYearLte: "fiscal_year.lte", fiscalYearLt: "fiscal_year.lt", order: "order", limit: "limit", page: "page" },
   response: V3EmployeeCountListCodec,
   errors: { "400": V3ErrorCodec, "401": V3ErrorCodec, "402": V3ErrorCodec, "404": V3ErrorCodec, "429": V3ErrorCodec, "500": V3ErrorCodec, "503": V3ErrorCodec },
 };

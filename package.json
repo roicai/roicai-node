@@ -44,7 +44,7 @@
   "scripts": {
     "generate": "scripts/generate.sh",
     "build": "rm -rf dist && tsc -p tsconfig.json",
-    "test": "node --test test/client.test.mjs test/live.test.mjs",
+    "test": "tsc -p test/tsconfig.json && node --test test/client.test.mjs test/live.test.mjs",
     "prepublishOnly": "npm run build && npm test"
   },
   "devDependencies": {
