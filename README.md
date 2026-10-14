@@ -2,8 +2,6 @@
 
 TypeScript and JavaScript client for the [ROIC.ai](https://roic.ai) financial data API: tickers, prices, fundamentals, ratios, earnings calls, company events and bulk downloads.
 
-> Not published to npm yet.
-
 ## Install
 
 ```sh
@@ -83,6 +81,17 @@ npm run generate                  # from https://api.roic.ai/openapi.json
 npm run generate -- ./spec.json   # from another document
 ```
 
-The **Codegen** workflow does this after every API deploy and opens a pull request when the SDK changed. Review the `openapi.json` diff in that pull request: a removed or renamed method, group or field needs a major version.
+The **Codegen** workflow does this after every API deploy and opens a pull request when the SDK changed. Review the `openapi.json` diff in that pull request: a removed or renamed method, group or field is a breaking change (see [Releasing](#releasing)).
 
 `src/index.ts` is the only hand-written source. It sets the default `baseUrl` and re-exports the generated client.
+
+## Releasing
+
+1. Open a pull request that sets `version` in `package.json` (and `package-lock.json`, with `npm version <version> --no-git-tag-version`). The SDK follows semver: while it is `0.x`, a breaking change needs a new minor version.
+2. After it merges, publish a GitHub release whose tag is `v` plus that version, such as `v0.1.0`. Mark it as a pre-release to publish under the `next` tag instead of `latest`.
+
+The **Release** workflow then builds, tests and publishes to npm with a provenance attestation. npm trusts that workflow as the package's publisher, so there is no npm token to rotate.
+
+## License
+
+[MIT](LICENSE)
