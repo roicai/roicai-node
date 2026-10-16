@@ -1,13 +1,13 @@
-# ROIC.ai Node.js Library
+# ROIC.AI Node.js Library
 
 [![Version](https://img.shields.io/npm/v/roicai.svg)](https://www.npmjs.com/package/roicai)
 [![Build Status](https://github.com/roicai/roicai-node/actions/workflows/ci.yml/badge.svg)](https://github.com/roicai/roicai-node/actions/workflows/ci.yml)
 
-The ROIC.ai Node.js library is the official TypeScript and JavaScript client for the [ROIC.ai](https://roic.ai) financial data API and stock API. Use it to get fundamentals for public companies, such as income statements, balance sheets, cash flow statements, financial ratios and valuation multiples, and earnings call transcripts. It also covers historical and latest stock prices, SEC filings and other company documents, the earnings calendar, company profiles and forex rates.
+The ROIC.AI Node.js library is the official TypeScript and JavaScript client for the [ROIC.AI](https://roic.ai) financial data API and stock API. Use it to get fundamentals for public companies, such as income statements, balance sheets, cash flow statements, financial ratios and valuation multiples, and earnings call transcripts. It also covers historical and latest stock prices, SEC filings and other company documents, the earnings calendar, company profiles and forex rates.
 
 ## Documentation
 
-See the [ROIC.ai API reference](https://api.roic.ai/v3.0.0/openapi) for every endpoint, parameter and field, and the [API guides](https://www.roic.ai/api) for authentication, plans and response formats.
+See the [ROIC.AI API reference](https://api.roic.ai/v3.0.0/openapi) for every endpoint, parameter and field, and the [API guides](https://www.roic.ai/api) for authentication, plans and response formats.
 
 ## Requirements
 
@@ -23,7 +23,7 @@ npm install roicai
 
 ## Usage
 
-The library needs your ROIC.ai API key, which you can find on the [authentication page](https://www.roic.ai/api/docs/authentication) once you sign in. Create a client with it:
+The library needs your ROIC.AI API key, which you can find on the [authentication page](https://www.roic.ai/api/docs/authentication) once you sign in. Create a client with it:
 
 ```ts
 import { createClient } from 'roicai';
@@ -436,7 +436,7 @@ const toUsd = await roicai.forexPrices.latest.list({ quoteCurrency: 'USD' });
 
 ## Support
 
-Report bugs and request features in [GitHub issues](https://github.com/roicai/roicai-node/issues). For questions about your account, plan or the data, contact ROIC.ai through [roic.ai](https://roic.ai).
+Report bugs and request features in [GitHub issues](https://github.com/roicai/roicai-node/issues). For questions about your account, plan or the data, contact ROIC.AI through [roic.ai](https://roic.ai).
 
 The library follows semver. While it is `0.x`, a minor version can include breaking changes, so pin the minor version you use.
 
