@@ -5,6 +5,7 @@ import { object } from "../../_/index.js";
 
 export interface V3CompanyProfile {
   address: { city: string | null; country: string | null; countryCode: string | null; line1: string | null; postalCode: string | null; state: string | null };
+  aiDescription: string | null;
   ceo: string | null;
   cik: string | null;
   /**
@@ -47,6 +48,7 @@ export interface V3CompanyProfile {
 
 export const V3CompanyProfileCodec = object([
   ["address", null, object([["country_code", "countryCode"], ["postal_code", "postalCode"]])],
+  ["ai_description", "aiDescription"],
   ["company_symbols", "companySymbols"],
   ["earnings_schedule", "earningsSchedule", object([["last_release_date", "lastReleaseDate"], ["last_release_time", "lastReleaseTime"], ["next_release_date", "nextReleaseDate"], ["next_release_time", "nextReleaseTime"]])],
   ["exchange_local_name", "exchangeLocalName"],

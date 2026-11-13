@@ -29,7 +29,7 @@
     },
     {
       "name": "Content",
-      "description": "Company earnings-call and future editorial content resources."
+      "description": "Company earnings calls, news articles, and future editorial content."
     },
     {
       "name": "Calendar",
@@ -1861,6 +1861,16 @@
               }
             ]
           },
+          "ai_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "sector": {
             "anyOf": [
               {
@@ -2259,6 +2269,7 @@
           "name",
           "description",
           "short_description",
+          "ai_description",
           "sector",
           "industry",
           "fundamental_currency",
@@ -18389,6 +18400,286 @@
         ],
         "$id": "#/components/schemas/v3.EarningsCallList"
       },
+      "v3.NewsListQuery": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "apikey": {
+            "description": "Browser-friendly alternative to Bearer authentication. Use either this parameter or the Authorization header, never both.",
+            "type": "string"
+          },
+          "published_at.gte": {
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+            "maxLength": 35,
+            "title": "published_at.gte",
+            "description": "Return news published at or after this RFC 3339 timestamp.",
+            "examples": [
+              "2026-11-11T14:37:34.883Z"
+            ],
+            "type": "string"
+          },
+          "published_at.gt": {
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+            "maxLength": 35,
+            "title": "published_at.gt",
+            "description": "Return news published after this RFC 3339 timestamp.",
+            "examples": [
+              "2026-11-11T14:37:34.883Z"
+            ],
+            "type": "string"
+          },
+          "published_at.lte": {
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+            "maxLength": 35,
+            "title": "published_at.lte",
+            "description": "Return news published at or before this RFC 3339 timestamp.",
+            "examples": [
+              "2026-11-11T14:37:34.883Z"
+            ],
+            "type": "string"
+          },
+          "published_at.lt": {
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+            "maxLength": 35,
+            "title": "published_at.lt",
+            "description": "Return news published before this RFC 3339 timestamp.",
+            "examples": [
+              "2026-11-11T14:37:34.883Z"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "minimum": 1,
+            "maximum": 100,
+            "multipleOf": 1,
+            "default": 25,
+            "title": "limit",
+            "description": "Maximum number of resources to return. Defaults to 25.",
+            "anyOf": [
+              {
+                "format": "numeric",
+                "default": 0,
+                "type": "string"
+              },
+              {
+                "minimum": 1,
+                "maximum": 100,
+                "multipleOf": 1,
+                "default": 25,
+                "title": "limit",
+                "description": "Maximum number of resources to return. Defaults to 25.",
+                "type": "number"
+              }
+            ]
+          },
+          "page": {
+            "maxLength": 4096,
+            "description": "Opaque page token from a previous response. Prefer following the returned page URLs directly.",
+            "type": "string"
+          }
+        },
+        "$id": "#/components/schemas/v3.NewsListQuery"
+      },
+      "v3.NewsCompanyParams": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "The company whose news to list. Accepts an exchange and symbol separated by a colon (e.g. `NASDAQ:AAPL`), a ticker ID, or a FIGI.",
+            "examples": [
+              "NASDAQ:AAPL",
+              "tkr_cO46h8pgSu9Qqy",
+              "BBG000B9XRY4"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "identifier"
+        ],
+        "$id": "#/components/schemas/v3.NewsCompanyParams"
+      },
+      "v3.NewsArticle": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "description": "A short teaser of the article, or null when there is none.",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url": {
+            "description": "Where the article is published: the publisher's page, or roic.ai for articles ROIC writes.",
+            "type": "string"
+          },
+          "site": {
+            "description": "The publisher's domain, e.g. `wsj.com`. `roic.ai` for articles ROIC writes.",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "symbols": {
+            "description": "The qualified ticker symbols of the companies the article is about, e.g. `NASDAQ:AAPL`, in alphabetical order. Can be empty.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "published_at": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "summary",
+          "url",
+          "site",
+          "image_url",
+          "symbols",
+          "published_at"
+        ],
+        "$id": "#/components/schemas/v3.NewsArticle"
+      },
+      "v3.NewsArticleList": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "summary": {
+                  "description": "A short teaser of the article, or null when there is none.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "url": {
+                  "description": "Where the article is published: the publisher's page, or roic.ai for articles ROIC writes.",
+                  "type": "string"
+                },
+                "site": {
+                  "description": "The publisher's domain, e.g. `wsj.com`. `roic.ai` for articles ROIC writes.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "image_url": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "symbols": {
+                  "description": "The qualified ticker symbols of the companies the article is about, e.g. `NASDAQ:AAPL`, in alphabetical order. Can be empty.",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "published_at": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "summary",
+                "url",
+                "site",
+                "image_url",
+                "symbols",
+                "published_at"
+              ],
+              "$id": "#/components/schemas/v3.NewsArticle"
+            }
+          },
+          "next_page_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "previous_page_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "next_page_url",
+          "previous_page_url"
+        ],
+        "$id": "#/components/schemas/v3.NewsArticleList"
+      },
       "v3.EarningsEventListQuery": {
         "additionalProperties": false,
         "type": "object",
@@ -29120,6 +29411,444 @@
         "x-fern-sdk-method-name": "retrieve"
       }
     },
+    "/v3.0.0/news": {
+      "get": {
+        "operationId": "listNews",
+        "summary": "List news",
+        "description": "Returns news articles from publishers and articles ROIC writes, newest first. Each article appears once, with every company it is about. History follows the plan's lookback limit. Filter by a `published_at` range.",
+        "tags": [
+          "Content"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Browser-friendly alternative to Bearer authentication. Use either this parameter or the Authorization header, never both.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.gte",
+              "description": "Return news published at or after this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.gt",
+              "description": "Return news published after this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.lte",
+              "description": "Return news published at or before this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.lt",
+              "description": "Return news published before this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "multipleOf": 1,
+              "default": 25,
+              "title": "limit",
+              "description": "Maximum number of resources to return. Defaults to 25.",
+              "anyOf": [
+                {
+                  "format": "numeric",
+                  "default": 0,
+                  "type": "string"
+                },
+                {
+                  "minimum": 1,
+                  "maximum": 100,
+                  "multipleOf": 1,
+                  "default": 25,
+                  "title": "limit",
+                  "description": "Maximum number of resources to return. Defaults to 25.",
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "maxLength": 4096,
+              "description": "Opaque page token from a previous response. Prefer following the returned page URLs directly.",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.NewsArticleList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Response for status 400",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Response for status 401",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Response for status 402",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Response for status 429",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Response for status 500",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Response for status 503",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "news",
+        "x-fern-sdk-method-name": "list"
+      }
+    },
+    "/v3.0.0/news/{identifier}": {
+      "get": {
+        "operationId": "listCompanyNews",
+        "summary": "List company news",
+        "description": "Returns the news articles about one company, newest first. Identify the company by an exchange and symbol separated by a colon (e.g. `NASDAQ:AAPL`), a ticker ID, or a FIGI; articles about any of its listings are included. Each article appears once, with every company it is about. History follows the plan's lookback limit. Filter by a `published_at` range.",
+        "tags": [
+          "Content"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "minLength": 1,
+              "maxLength": 128,
+              "description": "The company whose news to list. Accepts an exchange and symbol separated by a colon (e.g. `NASDAQ:AAPL`), a ticker ID, or a FIGI.",
+              "examples": [
+                "NASDAQ:AAPL",
+                "tkr_cO46h8pgSu9Qqy",
+                "BBG000B9XRY4"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "apikey",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "description": "Browser-friendly alternative to Bearer authentication. Use either this parameter or the Authorization header, never both.",
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.gte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.gte",
+              "description": "Return news published at or after this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.gt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.gt",
+              "description": "Return news published after this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.lte",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.lte",
+              "description": "Return news published at or before this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "published_at.lt",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?(Z|[+-]\\d{2}:\\d{2})$",
+              "maxLength": 35,
+              "title": "published_at.lt",
+              "description": "Return news published before this RFC 3339 timestamp.",
+              "examples": [
+                "2026-11-11T14:37:34.883Z"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "multipleOf": 1,
+              "default": 25,
+              "title": "limit",
+              "description": "Maximum number of resources to return. Defaults to 25.",
+              "anyOf": [
+                {
+                  "format": "numeric",
+                  "default": 0,
+                  "type": "string"
+                },
+                {
+                  "minimum": 1,
+                  "maximum": 100,
+                  "multipleOf": 1,
+                  "default": 25,
+                  "title": "limit",
+                  "description": "Maximum number of resources to return. Defaults to 25.",
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "maxLength": 4096,
+              "description": "Opaque page token from a previous response. Prefer following the returned page URLs directly.",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.NewsArticleList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Response for status 400",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Response for status 401",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Response for status 402",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Response for status 404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Response for status 429",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Response for status 500",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Response for status 503",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v3.Error"
+                }
+              }
+            }
+          }
+        },
+        "x-fern-sdk-group-name": "news.company",
+        "x-fern-sdk-method-name": "list"
+      }
+    },
     "/v3.0.0/calendar/earnings": {
       "get": {
         "operationId": "listEarningsCalendar",
@@ -29559,7 +30288,7 @@
       "get": {
         "operationId": "retrieveRawTranscript",
         "summary": "Retrieve a raw transcript",
-        "description": "Returns the plain-text transcript of an earnings event, without speaker labels or line breaks, from a ready Quartr transcript when one exists, otherwise from the FMP transcript. Free plans can read each company’s latest two events; Individual plans follow the plan’s lookback; Professional and Enterprise plans read everything. Use the `trraw_` id from the event listing.",
+        "description": "Returns the plain-text transcript of an earnings event, without speaker labels or line breaks. Free plans can read each company’s latest two events; Individual plans follow the plan’s lookback; Professional and Enterprise plans read everything. Use the `trraw_` id from the event listing.",
         "tags": [
           "Company Events"
         ],
@@ -29678,7 +30407,7 @@
       "get": {
         "operationId": "retrieveEditedTranscript",
         "summary": "Retrieve an edited transcript",
-        "description": "Returns the speaker-labelled transcript of an earnings event: ordered segments with a `speaker_id`, and a `speakers` map with each speaker’s name, role, and company where known. Quartr transcripts prefer the human-edited edition, then the aligned edition; FMP transcripts derive speakers from the turn names. Professional and Enterprise plans only. Use the `tredit_` id from the event listing.",
+        "description": "Returns the speaker-labelled transcript of an earnings event: ordered segments with a `speaker_id`, and a `speakers` map with each speaker’s name, role, and company where known. The human-edited edition is preferred when one exists. Professional and Enterprise plans only. Use the `tredit_` id from the event listing.",
         "tags": [
           "Company Events"
         ],

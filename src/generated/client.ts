@@ -50,6 +50,7 @@ import {
   type Client as MarketsClient,
   bind as bindMarkets,
 } from "./markets/client.js";
+import { type Client as NewsClient, bind as bindNews } from "./news/client.js";
 import {
   type Client as SectorsClient,
   bind as bindSectors,
@@ -87,6 +88,7 @@ export interface Client {
   readonly fundamentals: FundamentalsClient;
   readonly industries: IndustriesClient;
   readonly markets: MarketsClient;
+  readonly news: NewsClient;
   readonly sectors: SectorsClient;
   readonly stockPrices: StockPricesClient;
   readonly stockSplits: StockSplitsClient;
@@ -110,6 +112,7 @@ export function bind(transport: Transport): Client {
   let fundamentalsClient: FundamentalsClient | undefined;
   let industriesClient: IndustriesClient | undefined;
   let marketsClient: MarketsClient | undefined;
+  let newsClient: NewsClient | undefined;
   let sectorsClient: SectorsClient | undefined;
   let stockPricesClient: StockPricesClient | undefined;
   let stockSplitsClient: StockSplitsClient | undefined;
@@ -150,6 +153,9 @@ export function bind(transport: Transport): Client {
     },
     get markets() {
       return (marketsClient ??= bindMarkets(transport));
+    },
+    get news() {
+      return (newsClient ??= bindNews(transport));
     },
     get sectors() {
       return (sectorsClient ??= bindSectors(transport));
