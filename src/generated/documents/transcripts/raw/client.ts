@@ -22,11 +22,10 @@ export interface Client {
    * Retrieve a raw transcript
    *
    * Returns the plain-text transcript of an earnings event, without speaker
-   * labels or line breaks, from a ready Quartr transcript when one exists,
-   * otherwise from the FMP transcript. Free plans can read each company’s
-   * latest two events; Individual plans follow the plan’s lookback;
-   * Professional and Enterprise plans read everything. Use the `trraw_` id from
-   * the event listing.
+   * labels or line breaks. Free plans can read each company’s latest two
+   * events; Individual plans follow the plan’s lookback; Professional and
+   * Enterprise plans read everything. Use the `trraw_` id from the event
+   * listing.
    */
   retrieve(request: RetrieveRequest, options?: RequestOptions): Promise<RetrieveResponse>;
 }

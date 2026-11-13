@@ -23,10 +23,9 @@ export interface Client {
    *
    * Returns the speaker-labelled transcript of an earnings event: ordered
    * segments with a `speaker_id`, and a `speakers` map with each speaker’s
-   * name, role, and company where known. Quartr transcripts prefer the
-   * human-edited edition, then the aligned edition; FMP transcripts derive
-   * speakers from the turn names. Professional and Enterprise plans only. Use
-   * the `tredit_` id from the event listing.
+   * name, role, and company where known. The human-edited edition is preferred
+   * when one exists. Professional and Enterprise plans only. Use the `tredit_`
+   * id from the event listing.
    */
   retrieve(request: RetrieveRequest, options?: RequestOptions): Promise<RetrieveResponse>;
 }
